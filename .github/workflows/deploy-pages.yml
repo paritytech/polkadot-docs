@@ -2,8 +2,9 @@ name: Deploy docs to GitHub Pages
 
 on:
   push:
-    branches: [master, parity-deploy]
+    branches: [parity-deploy]
   workflow_dispatch:
+  workflow_call:   # invoked by sync-upstream.yml after a clean auto-sync
 
 permissions:
   contents: read
@@ -23,7 +24,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history for git-revision-date-localized under --strict
+          ref: parity-deploy   # always build the deploy branch tip (correct for push, dispatch, and workflow_call)
+          fetch-depth: 0       # full history for git-revision-date-localized under --strict
 
       - name: Set up Python
         uses: actions/setup-python@v5
