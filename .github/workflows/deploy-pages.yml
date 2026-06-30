@@ -1,0 +1,80 @@
+name: Deploy docs to GitHub Pages
+
+on:
+  push:
+    branches: [parity-deploy]
+  workflow_dispatch:
+  workflow_call:   # invoked by sync-upstream.yml after a clean auto-sync
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; let an in-progress run finish rather than
+# cancelling it (a half-published Pages deploy is worse than a queued one).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: parity-deploy   # always build the deploy branch tip (correct for push, dispatch, and workflow_call)
+          fetch-depth: 0       # full history for git-revision-date-localized under --strict
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install imaging libs (social cards)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 libffi-dev
+
+      - name: Cache Material social cards
+        uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ github.run_id }}
+          restore-keys: mkdocs-material-
+          path: .cache
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Build site
+        run: mkdocs build --strict -d site
+
+      - name: Generate client-side redirect stubs (GH Pages has no server-side 301s)
+        run: python scripts/gen_redirects.py --site-dir site --redirects redirects.json
+
+      # Custom domain is opt-in: set the repo variable CUSTOM_DOMAIN
+      # (e.g. docs.polkadot.com) to publish under it. Left unset, the site
+      # deploys to the *.github.io URL — useful for testing without claiming
+      # the production domain.
+      - name: Set custom domain
+        if: vars.CUSTOM_DOMAIN != ''
+        run: echo "${{ vars.CUSTOM_DOMAIN }}" > site/CNAME
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
