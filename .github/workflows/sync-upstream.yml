@@ -1,0 +1,69 @@
+name: Sync from upstream
+
+# Keeps the deployment branch (parity-deploy) up to date with the upstream
+# content repo (polkadot-developers/polkadot-docs). Upstream changes are
+# brought in via a PR so conflicts with the deploy-specific changes are
+# reviewed, and the human merge into parity-deploy is what triggers a deploy.
+
+on:
+  schedule:
+    - cron: '0 5 * * *'   # daily, 05:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      UPSTREAM: https://github.com/polkadot-developers/polkadot-docs.git
+    steps:
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: parity-deploy
+          fetch-depth: 0
+
+      - name: Merge upstream into a sync branch
+        id: merge
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream "$UPSTREAM"
+          git fetch --quiet upstream master
+
+          if git merge-base --is-ancestor upstream/master HEAD; then
+            echo "Already up to date with upstream."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          branch="sync/upstream-$(date -u +%Y%m%d)"
+          git switch -c "$branch"
+          if git merge --no-edit upstream/master; then
+            echo "conflicts=false" >> "$GITHUB_OUTPUT"
+          else
+            git add -A
+            git commit --no-edit -m "Merge upstream/master (CONFLICTS — resolve before merging)"
+            echo "conflicts=true" >> "$GITHUB_OUTPUT"
+          fi
+          git push -f origin "$branch"
+          echo "changed=true"  >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Open sync PR
+        if: steps.merge.outputs.changed == 'true'
+        run: |
+          note=""
+          if [ "${{ steps.merge.outputs.conflicts }}" = "true" ]; then
+            note=" ⚠️ This merge has conflicts with the deploy-specific changes — resolve them before merging."
+          fi
+          gh pr create \
+            --base parity-deploy \
+            --head "${{ steps.merge.outputs.branch }}" \
+            --title "Sync content from upstream ($(date -u +%Y-%m-%d))" \
+            --body "Automated sync of upstream \`polkadot-developers/polkadot-docs\` into the deployment branch.${note} Merging this PR publishes the updated content." \
+            || echo "A PR for this branch may already exist."
