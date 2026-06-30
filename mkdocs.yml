@@ -3,7 +3,7 @@ site_name: Polkadot Developer Docs
 site_url: https://docs.polkadot.com/
 edit_uri: https://github.com/polkadot-developers/polkadot-docs/edit/master/docs/
 docs_dir: docs
-copyright: © 2026 Polkadot.
+copyright: © 2026 Parity Technologies Limited. Documentation content licensed under CC BY 4.0.
 
 # Extra JavaScript files
 extra_javascript:
