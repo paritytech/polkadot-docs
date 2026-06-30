@@ -8,7 +8,9 @@ mkdocs-git-revision-date-localized-plugin==1.4.5
 mkdocs-glightbox==0.4.0
 mkdocs-macros-plugin==1.3.7
 neoteroi-mkdocs==1.1.0
-papermoon-mkdocs-plugins==0.1.0a18
+# Installed from the paritytech fork of the (unmaintained alpha) upstream,
+# pinned to a tag for reproducibility/control.
+papermoon-mkdocs-plugins @ git+https://github.com/paritytech/mkdocs-plugins@v0.1.0a18
 
 # Markdown extensions
 Markdown==3.7
