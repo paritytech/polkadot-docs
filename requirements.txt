@@ -15,7 +15,7 @@ papermoon-mkdocs-plugins @ git+https://github.com/paritytech/mkdocs-plugins@v0.1
 # Markdown extensions
 Markdown==3.7
 Pygments==2.19.1
-pymdown-extensions==10.14.3
+pymdown-extensions==10.21.3
 
 # Dependencies
 Babel==2.15.0
