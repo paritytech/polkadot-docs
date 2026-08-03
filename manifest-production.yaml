@@ -1,0 +1,5 @@
+images:
+  polkadot-docs-mcp:
+    http:
+      host: docs-mcp.polkadot.com
+      path: /
