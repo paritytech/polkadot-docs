@@ -1,3 +1,7 @@
+# Staging overrides (merged on top of manifest.yaml) — consumed by the devops
+# generic-helm chart on the parity-stg cluster (traefik-internal, private LB).
+# The host is in the parity-stg.parity.io zone, so the default letsencrypt-dns01
+# issuer handles the certificate automatically.
 images:
   polkadot-docs-mcp:
     http:

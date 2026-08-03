@@ -1,3 +1,13 @@
+# Production overrides (merged on top of manifest.yaml) — consumed by the devops
+# generic-helm chart on the parity-prod cluster (traefik-external, public).
+#
+# http-01 issuer: docs-mcp.polkadot.com lives in Parity's Cloudflare zone,
+# outside cert-manager's CloudDNS DNS-01 solver (parity.io zones only), so the
+# default letsencrypt-dns01 cannot validate it. The DNS record must CNAME to
+# traefik-external.parity-prod.parity.io with Cloudflare proxying off
+# (devops-cloud-infra terraform/cloudflare/zones/polkadot.com).
+productionCertIssuerType: "http"
+
 images:
   polkadot-docs-mcp:
     http:

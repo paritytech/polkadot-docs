@@ -1,9 +1,11 @@
 registry: europe-docker.pkg.dev/parity-mgmt/polkadot-docs-mcp
 
+# Base values for the devops generic-helm chart (rendered by the products
+# appset in devops-cloud-infra). The ingress host per environment is set via
+# the `http:` block in manifest-staging.yaml / manifest-production.yaml.
 images:
   polkadot-docs-mcp:
     dockerfile: dockerfile-mcp.yaml
     context: .
-    http:
-      host: docs-mcp.polkadot.com
-      path: /
+    # Must match the port the MCP server listens on (dockerfile-mcp.yaml EXPOSE).
+    port: 8000
