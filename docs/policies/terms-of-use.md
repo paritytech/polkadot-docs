@@ -15,6 +15,12 @@ Links to third-party sites are for reference only, do not imply endorsement, we 
 
 This website is hosted via GitHub Pages that logs visitor IP addresses when a Pages site is visited (IPs are stored for security purposes, regardless of whether the visitor is signed in).
 
+## Our Role
+
+Parity builds products, but we do not launch them, host them, or operate them as services. We build software that is deployable, but not deployed by us; we do not control, run, or market live systems. We are authors, not operators. We ship code, not services. We build for permissionless use, not for specific use cases or jurisdictions.
+
+The [Polkadot Community Foundation](https://www.polkadotcommunity.foundation/), acting at its own discretion as the external representation of Polkadot, holds and steward certain community assets, and deploy Polkadot products including those built by Parity and those built by others.
+
 These terms are governed by the laws of England and Wales. By using this website, you agree to these terms.
 
 For enquiries, contact: [info@parity.io](mailto:info@parity.io)
