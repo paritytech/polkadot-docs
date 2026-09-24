@@ -1,15 +1,6 @@
-import { createApp } from '@parity/product-sdk';
+// Place this in your Product, after the setup from `setup-app.ts`.
 import { StatementStoreClient } from '@parity/product-sdk-statement-store';
-
-// `name` is your dotNS identifier: the Host derives the product account from
-// it. An unregistered name leaves `accounts` empty rather than raising an error.
-const app = await createApp({ name: 'my-product.dot' });
-const { accounts } = await app.wallet.connect();
-if (accounts.length === 0) {
-  throw new Error(
-    'No accounts available — pair Polkadot Desktop with a signer.',
-  );
-}
+import { accounts } from './setup-app';
 
 // `appName` is the gossip topic this client subscribes to, not a dotNS name.
 export const client = new StatementStoreClient({ appName: 'my-product' });
