@@ -64,31 +64,31 @@ dependencies:
       version: 5.18.3
     polkadot_js_api:
       name: '@polkadot/api'
-      version: 16.5.6
+      version: 17.0.2
     polkadot_api:
       name: polkadot-api
-      version: 2.1.0
+      version: 3.2.1
     resolc:
       name: '@parity/resolc'
-      version: 1.2.0
+      version: 1.4.0
     hardhat_polkadot:
       name: '@parity/hardhat-polkadot'
       version: 0.3.0
     solc:
       name: 'solc'
-      version: 0.8.35
+      version: 0.8.36
     web3_js:
-      name: '@web3js'
+      name: web3
       version: 4.16.0
     viem:
-      name: '@viem'
-      version: 2.44.4 
+      name: viem
+      version: 2.57.5
     ethersjs:
-      name: '@ethersjs'
+      name: ethers
       version: 6.16.0
     paraspell_sdk:
       name: '@paraspell/sdk'
-      version: 13.4.0
+      version: 14.4.3
     hdkd:
       name: '@polkadot-labs/hdkd'
       version: 0.0.32
